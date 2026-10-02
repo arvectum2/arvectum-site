@@ -18,6 +18,9 @@ const forbiddenTracked = [
   /^public\/api\/storage\/.*\.(?:jsonl|log|db|sqlite)$/i,
   /(^|\/)__MACOSX\//,
   /^\.github\/workflows\/(?:\.trigger|trigger-)/,
+  /google-search-console-service-account\.json$/i,
+  /yandex-webmaster\.token$/i,
+  /indexnow\.key$/i,
 ];
 
 for (const file of tracked) {

@@ -28,6 +28,9 @@ jobs:
       - name: JavaScript syntax
         run: node scripts/check-js.mjs
 
+      - name: Sitemap freshness
+        run: node scripts/seo-generate-sitemap.mjs --check
+
       - name: Static site checks
         run: node scripts/check-static.mjs
 

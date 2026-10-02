@@ -77,3 +77,16 @@ Production is the content of `public/`. The hosting account keeps runtime `.env`
 Before deployment, run repository checks and PHP syntax checks. After deployment, run `scripts/check-production.mjs`.
 
 See `DEPLOY_CHECKLIST.md` for the operational checklist.
+
+## SEO automation
+
+SEO is part of the delivery pipeline rather than a manual webmaster task:
+
+- `scripts/seo-generate-sitemap.mjs` keeps the sitemap synchronized with canonical indexable pages and Git-derived `lastmod` dates;
+- `scripts/seo-diff.mjs` computes new, changed and deleted canonical URLs between deployed commits;
+- `scripts/seo-indexnow.mjs` notifies Yandex through IndexNow;
+- `scripts/seo-google.mjs` integrates with Google Search Console;
+- `scripts/seo-yandex.mjs` integrates with Yandex Webmaster;
+- `scripts/seo-weekly-report.mjs` captures recurring search-engine evidence.
+
+Credentials and reports remain outside Git. See `docs/seo/AUTOMATION.md`.
