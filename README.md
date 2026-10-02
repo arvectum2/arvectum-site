@@ -1,146 +1,79 @@
-# Arvectum Landing
+# Arvectum Site
 
-Статический B2B-сайт Arvectum про автоматизацию закупок, тендеров и операционных процессов. Проект рассчитан на обычный PHP-хостинг: HTML/CSS/JS лежат в `public/`, а backend-обработчики формы и cookies находятся в `public/api/`.
+Canonical repository for the public `arvectum.com` website.
 
-## Локальный запуск
+Canonical state:
 
-```bash
-npm install
-npm run dev
-```
+- GitHub: `arvectum2/arvectum-site`
+- GitVerse mirror: `arvectum/arvectum-site`
+- Mac mini checkout: `/Volumes/ArvectumSSD/Arvectum/repos/arvectum-site`
+- Production document root: REG.RU `www/arvectum.com`
+- Deployable website: `public/`
 
-Локальный адрес по умолчанию:
+The site is intentionally simple: static HTML/CSS/JS plus small PHP endpoints for forms, health checks, and cookie-consent logging.
 
-- `http://localhost:8788`
+## Repository layout
 
-## Проверки
+- `public/` — production web root.
+- `public/api/` — PHP endpoints.
+- `public/api/storage/` — runtime-only data; logs and consent records are never committed.
+- `public/assets/` — production assets with explicit size budgets.
+- `docs/brand/` — heavyweight source/reference brand artwork not served by the website.
+- `docs/seo/` — SEO research and historical implementation evidence.
+- `scripts/` — deterministic repository, JS, static-site, asset, and production checks.
+- `.github/workflows/ci.yml` — repository/site validation.
+- `.github/workflows/mirror-to-gitverse.yml` — GitHub to GitVerse mirror.
 
-Запуск линта:
+## Local development
 
-```bash
-npm run lint
-```
+With npm available:
 
-Комплексная локальная проверка:
+    npm ci
+    npm run dev
 
-```bash
-npm run check
-```
+Default local address: http://localhost:8788
 
-Она включает:
+The core checks can also be run directly with Node, without the npm wrapper:
 
-- форматирование HTML/CSS/JS;
-- синтаксис `public/app.js` и `public/site-config.js`;
-- проверку PHP-обработчиков;
-- статическую проверку `title`, `description`, `canonical`, sitemap, локальных ссылок и ассетов.
+    node scripts/check-repository.mjs
+    node scripts/check-js.mjs
+    node scripts/check-static.mjs
+    node scripts/check-assets.mjs
 
-Проверка production:
+## Validation
 
-```bash
-npm run check:production
-```
+`npm run check` runs repository invariants, JavaScript syntax, static-site checks, and asset budgets.
 
-Скрипт проверяет:
+PHP syntax:
 
-- `https://arvectum.com/`
-- `https://www.arvectum.com/`
-- `https://arvectum.com/health.html`
-- `https://arvectum.com/api/health.php`
-- `https://arvectum.com/robots.txt`
-- `https://arvectum.com/sitemap.xml`
+    npm run lint:php
 
-## Структура
+External production verification:
 
-- `public/index.html` — главная страница с no-JS fallback.
-- `public/solutions.html` — решения с закупочным фокусом.
-- `public/solutions/procurement.html` — отдельная SEO-страница по закупкам и тендерам.
-- `public/solutions/document-workflow.html` — отдельная SEO-страница по согласованиям и документообороту.
-- `public/solutions/operations.html` — отдельная SEO-страница по операционным процессам.
-- `public/solutions/ai-document-checks.html` — отдельная SEO-страница по AI-проверке документов.
-- `public/cases.html` — скрытая вспомогательная страница со сценариями, держится вне публичной SEO-структуры через `noindex,nofollow`.
-- `public/approach.html` — этапы работы, форматы и FAQ.
-- `public/contact.html` — форма заявки и прямые контакты.
-- `public/privacy.html` — политика конфиденциальности.
-- `public/personal-data-consent.html` — согласие на обработку персональных данных.
-- `public/cookies.html` — политика cookies.
-- `public/thank-you.html` — страница успешной отправки формы без JS.
-- `public/health.html` — статический health-check.
-- `public/build-info.json` — версия и дата сборки для health-check.
-- `public/favicon.ico` — корневой favicon.
-- `public/assets/brand/favicon.svg` — основной favicon для современных браузеров.
-- `public/assets/brand/favicon-32x32.png` — favicon 32x32.
-- `public/assets/brand/favicon-16x16.png` — favicon 16x16.
-- `public/assets/brand/favicon-48x48.png` — favicon 48x48.
-- `public/assets/brand/apple-touch-icon.png` — Apple touch icon.
-- `public/favicon-preview.html` — служебная страница для визуальной проверки favicon, исключена из индексации.
-- `public/app.js` — рендер страниц, навигация, форма, cookie-consent, RU/EN.
-- `public/site-config.js` — двуязычный контент.
-- `public/api/submit.php` — отправка заявок в Telegram и email.
-- `public/api/health.php` — проверка PHP/backend.
-- `public/api/cookie-consent.php` — серверный лог согласий по cookies.
-- `scripts/check-static.mjs` — локальная статическая проверка сайта.
-- `scripts/check-production.mjs` — внешняя проверка production URL.
+    npm run check:production
 
-## Настройка `.env`
+GitHub Actions runs repository, JS, static, asset, and PHP checks on `main`, pull requests, and manual dispatch.
 
-Создайте `public/.env` по образцу `public/.env.example`.
+## Secrets and runtime data
 
-Основные переменные:
+Create `public/.env` from `public/.env.example` only where the PHP runtime needs it.
 
-- `TELEGRAM_BOT_TOKEN`
-- `TELEGRAM_CHAT_ID`
-- `TELEGRAM_THREAD_ID` — опционально
-- `FORM_TO_EMAIL`
+Never commit:
 
-В репозиторий нельзя коммитить реальные секреты.
+- `public/.env`;
+- tokens, passwords, or private keys;
+- `public/api/storage/*.jsonl`;
+- runtime logs or databases;
+- deployment backups.
 
-## Как работает форма
+Only `public/api/storage/.gitkeep` and its protective `.htaccess` are tracked.
 
-Форма заявки отправляет данные сразу в два канала, если они настроены:
+## Deployment model
 
-- Telegram-бот
-- email через `mail()`
+GitHub is the canonical remote. Every GitHub push is mirrored to GitVerse by GitHub Actions.
 
-Правило успеха:
+Production is the content of `public/`. The hosting account keeps runtime `.env` and runtime storage separately from Git.
 
-- если сработал хотя бы один канал, заявка считается доставленной;
-- при JS-отправке frontend получает JSON и показывает статус прямо в форме;
-- без JavaScript обычный POST уходит в `public/api/submit.php`, а после успеха пользователь попадает на `thank-you.html`.
+Before deployment, run repository checks and PHP syntax checks. After deployment, run `scripts/check-production.mjs`.
 
-Если отправка не удалась:
-
-- JS-пользователь увидит понятное сообщение с прямыми контактами;
-- пользователь без JS получит HTML-страницу ошибки, а не сырой JSON.
-
-## Cookies и consent
-
-На сайте есть:
-
-- баннер cookies;
-- модальное окно настроек;
-- разделение обязательных и аналитических cookies;
-- серверный лог согласий в `public/api/storage/`.
-
-При выборе `Только обязательные` аналитические cookies не создаются.
-
-## Деплой на PHP-хостинг
-
-Загрузите содержимое папки `public/` в web root хостинга.
-
-После загрузки проверьте:
-
-1. `index.html` лежит в корне сайта.
-2. `https://arvectum.com/health.html` открывается.
-3. `https://arvectum.com/api/health.php` возвращает JSON.
-4. `https://arvectum.com/robots.txt` и `https://arvectum.com/sitemap.xml` доступны.
-5. `https://arvectum.com/favicon.ico` открывается.
-6. `https://arvectum.com/favicon-preview.html` показывает SVG/PNG-версии favicon.
-7. После обновления favicon выполнен hard refresh браузера.
-8. Форма заявки доходит хотя бы в один канал.
-
-Если хотите собрать архив для хостинга:
-
-```bash
-cd public
-zip -r ../arvectum-hosting-deploy.zip .
-```
+See `DEPLOY_CHECKLIST.md` for the operational checklist.

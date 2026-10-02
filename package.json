@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "node ./node_modules/wrangler/bin/wrangler.js pages dev public --port 8788",
-    "check": "npm run check:site",
+    "check": "node scripts/check-repository.mjs && node scripts/check-js.mjs && node scripts/check-static.mjs && node scripts/check-assets.mjs",
+    "check:repo": "node scripts/check-repository.mjs",
+    "check:js": "node scripts/check-js.mjs",
+    "check:static": "node scripts/check-static.mjs",
     "check:assets": "node scripts/check-assets.mjs",
     "check:production": "node scripts/check-production.mjs",
-    "check:site": "npm run lint:format && npm run lint:js && npm run check:static && npm run check:assets",
-    "check:static": "node scripts/check-static.mjs",
-    "lint": "npm run check:site && npm run lint:php",
     "lint:format": "node ./node_modules/prettier/bin/prettier.cjs --check \"public/**/*.{html,css,js}\" README.md",
-    "lint:js": "node -e \"const fs=require('fs'); ['public/app.js','public/site-config.js'].forEach((file)=>new Function(fs.readFileSync(file,'utf8'))); console.log('JS syntax OK')\"",
-    "lint:php": "php -l public/api/submit.php && php -l public/api/cookie-consent.php && php -l public/api/health.php"
+    "lint:php": "php -l public/api/submit.php && php -l public/api/cookie-consent.php && php -l public/api/health.php",
+    "verify": "npm run check && npm run lint:php",
+    "lint": "npm run verify"
   },
   "devDependencies": {
     "prettier": "^3.8.4",

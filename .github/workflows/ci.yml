@@ -1,0 +1,41 @@
+name: Site checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repository invariants
+        run: node scripts/check-repository.mjs
+
+      - name: JavaScript syntax
+        run: node scripts/check-js.mjs
+
+      - name: Static site checks
+        run: node scripts/check-static.mjs
+
+      - name: Asset budget
+        run: node scripts/check-assets.mjs
+
+      - name: PHP syntax
+        run: |
+          php -l public/api/submit.php
+          php -l public/api/cookie-consent.php
+          php -l public/api/health.php

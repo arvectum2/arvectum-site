@@ -1,49 +1,33 @@
-# DEPLOY CHECKLIST
+# Arvectum Site — deployment checklist
 
-1. Загрузить содержимое папки `public/` в web root хостинга.
-2. Проверить, что `index.html` лежит именно в корне сайта, а не во вложенной папке.
-3. Проверить DNS для `arvectum.com` и `www.arvectum.com`.
-4. Если используется Cloudflare, проверить режим `SSL/TLS` и убедиться, что он соответствует настройке origin-сервера.
-5. Убедиться, что PHP выполняется на хостинге.
-6. Открыть `https://arvectum.com/health.html` и проверить статическую health-страницу.
-7. Открыть `https://arvectum.com/api/health.php` и проверить JSON-ответ.
-8. Проверить, что `public/.env` не загружается в репозиторий и присутствует только на сервере.
-9. Проверить работу `POST /api/submit.php` с корректным `.env`.
-10. Проверить, что директория `api/storage/` недоступна из браузера.
-11. Если сайт или API продолжают отдавать `502 Bad Gateway`, проверить:
-    - корневую директорию сайта на хостинге;
-    - проксирование/маршрутизацию на стороне Cloudflare;
-    - версию PHP и логи веб-сервера;
-    - корректность путей до `index.html` и `api/*.php`.
+## Source and safety
 
-## SEO Checklist
+1. Work only from `/Volumes/ArvectumSSD/Arvectum/repos/arvectum-site`.
+2. Ensure `git status` is clean and `main` is synchronized with GitHub.
+3. Run:
+   - `node scripts/check-repository.mjs`
+   - `node scripts/check-js.mjs`
+   - `node scripts/check-static.mjs`
+   - `node scripts/check-assets.mjs`
+4. Validate PHP syntax on a host with PHP available.
+5. Never copy `public/.env` from Git; production secrets remain server-local.
+6. Never overwrite production `api/storage/` runtime records from Git.
 
-### Before deploy
+## Deploy
 
-1. Run `npm run lint`.
-2. Run `npm run check`.
-3. Verify `sitemap.xml` contains only public indexable pages.
-4. Verify `robots.txt` contains `Sitemap: https://arvectum.com/sitemap.xml`.
-5. Verify favicon files exist:
-   - `public/favicon.ico`
-   - `public/assets/brand/favicon.svg`
-   - `public/assets/brand/favicon-32x32.png`
-   - `public/assets/brand/favicon-16x16.png`
-   - `public/assets/brand/favicon-48x48.png`
-   - `public/assets/brand/apple-touch-icon.png`
-6. Verify `cases.html` is `noindex,nofollow` or removed from public SEO structure.
-7. Deploy `public/` to hosting.
+1. Back up the current production document root.
+2. Deploy the contents of `public/` to the `arvectum.com` document root.
+3. Preserve server-local `.env` and runtime `api/storage/` data.
+4. Verify permissions on PHP files and `api/storage/.htaccess`.
 
-### After deploy
+## Post-deploy
 
-1. Open `https://arvectum.com/`.
-2. Open `https://arvectum.com/robots.txt`.
-3. Open `https://arvectum.com/sitemap.xml`.
-4. Open `https://arvectum.com/favicon.ico`.
-5. Open `https://arvectum.com/favicon-preview.html`.
-6. Hard refresh the browser if the old favicon is still cached.
-7. Check the browser tab in both light and dark browser themes.
-8. Run `npm run check:production`.
-9. Re-submit sitemap in Google Search Console after this deploy, because the sitemap and materials section changed.
-10. Re-submit sitemap in Yandex Webmaster after this deploy, because the sitemap and materials section changed.
-11. If a new page or article is added later, update `public/sitemap.xml` and re-submit it in both webmaster tools again.
+1. Run `node scripts/check-production.mjs`.
+2. Verify `/`, `/health.html`, `/api/health.php`, `/robots.txt`, and `/sitemap.xml`.
+3. Verify the form submission path and cookie-consent endpoint.
+4. Confirm `www.arvectum.com` redirects or serves as intended.
+5. If health checks fail, restore the pre-deploy backup before investigating further.
+
+## Repository mirrors
+
+GitHub `arvectum2/arvectum-site` is canonical. GitVerse `arvectum/arvectum-site` is an automated mirror and must converge to the same commit after every GitHub push.

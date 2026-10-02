@@ -9,7 +9,7 @@ AI agents for procurement and tenders (ИИ-агенты для закупок �
 > MVP одного сценария за 2–4 недели.
 
 ## Repository separation
-- **Implementation target:** `arutyunoveth/arvectum-landing` — website code only
+- **Implementation target:** `arvectum2/arvectum-site` — website code only
 - **Reference only (do not modify):** `arutyunoveth/ai-corporation` — product-core repository
 
 ## Forbidden claims
