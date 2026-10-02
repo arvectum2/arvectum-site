@@ -43,7 +43,7 @@ export const discoverIndexablePages = () =>
       };
     })
     .filter((page) => isIndexableHtml(page.html))
-    .sort((a, b) => a.url.localeCompare(b.url));
+    .sort((a, b) => (a.url < b.url ? -1 : a.url > b.url ? 1 : 0));
 
 export const lastModifiedFor = (rel, ref = "HEAD") => {
   const gitPath = normalize(path.posix.join("public", rel));
