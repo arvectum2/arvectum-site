@@ -1,5 +1,6 @@
 (function () {
   const config = window.SITE_CONFIG || {};
+  const apiConfig = config.api || {};
   const routes = config.routes || {};
   const defaultLanguage = config.defaultLanguage || "ru";
   const currentPage = document.body.dataset.page || "home";
@@ -50,6 +51,12 @@
       currentLanguage === defaultLanguage ? "" : `?lang=${currentLanguage}`;
     const path = file === "index.html" ? "/" : `/${file}`;
     return `${path}${query}${hash}`;
+  };
+
+  const buildAgentUiUrl = () => {
+    const baseUrl = String(apiConfig.baseUrl || "").replace(/\/$/u, "");
+    const uiPath = String(apiConfig.tenderAgentUiPath || "");
+    return `${baseUrl}${uiPath.startsWith("/") ? uiPath : `/${uiPath}`}`;
   };
 
   const buildAbsoluteUrl = (slug, language = currentLanguage) => {
@@ -210,6 +217,8 @@
     setText("skipLink", currentCommon.skipLink);
     setText("brandMeta", currentCommon.brandMeta);
     setText("topbarCta", currentCommon.headerCta);
+    setText("agentLaunchCta", currentCommon.agentLaunchLabel);
+    setText("agentAccessLabel", currentCommon.testAccessLabel);
     setText("menuButtonText", currentCommon.menuLabel);
     setText("menuTitle", currentCommon.menuTitle);
     setText("menuCloseText", currentCommon.menuClose);
@@ -266,10 +275,19 @@
       `${menuMarkup}${menuLegalMarkup ? `<div class="menu-nav__divider" aria-hidden="true"></div><div class="menu-nav__meta">${menuLegalMarkup}</div>` : ""}`,
     );
 
-    const ctaUrl = buildUrl("contact");
-    ["topbarCta", "menuPrimaryCta"].forEach((id) => {
+    const ctaUrl = buildAgentUiUrl();
+    [
+      "topbarCta",
+      "menuPrimaryCta",
+      "agentLaunchCta",
+      "homeAgentLaunchCta",
+    ].forEach((id) => {
       const el = document.getElementById(id);
-      if (el) el.setAttribute("href", ctaUrl);
+      if (el) {
+        el.setAttribute("href", ctaUrl);
+        if (id !== "homeAgentLaunchCta")
+          el.textContent = currentCommon.agentLaunchLabel;
+      }
     });
 
     const menuTelegram = document.getElementById("menuTelegramLink");
@@ -1421,7 +1439,7 @@
     setCookie(`${COOKIE_PREFIX}utm_content`, snapshot.utm_content, 30);
   };
 
-  const sendConsentLog = async (consent) => {
+  const sendConsentLog = (consent) => {
     try {
       const snapshot = getVisitSnapshot();
       const payload = {
@@ -1447,14 +1465,27 @@
         payload.language = navigator.language;
       }
 
-      await fetch("/api/cookie-consent.php", {
+      const body = JSON.stringify(payload);
+      const blob = new Blob([body], { type: "application/json" });
+      if (
+        typeof navigator.sendBeacon === "function" &&
+        navigator.sendBeacon("/api/cookie-consent.php", blob)
+      ) {
+        return true;
+      }
+      fetch("/api/cookie-consent.php", {
         method: "POST",
         keepalive: true,
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+        body,
+      })
+        .then((response) => response.ok)
+        .catch(() => false);
+      return true;
     } catch (_) {
       // consent log errors should never block the site
+      return false;
     }
   };
 

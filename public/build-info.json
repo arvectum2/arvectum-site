@@ -1,5 +1,8 @@
 {
-  "version": "1.0.0",
-  "build": "manual",
-  "updatedAt": "2026-06-16T00:00:00Z"
+  "schema_version": 1,
+  "release": "r0-sync-2026-07-11",
+  "build_date_utc": "2026-07-13T14:47:41Z",
+  "git_sha": "9b87212500b48ec918973f0e38351a5ad14b2603",
+  "source_branch": "main",
+  "environment": "production"
 }

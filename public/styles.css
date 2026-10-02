@@ -322,6 +322,9 @@ img {
   display: none;
   place-items: start center;
   padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: rgba(3, 10, 21, 0.46);
 }
 
@@ -335,9 +338,42 @@ body.menu-open .menu-drawer {
 
 .menu-drawer__panel {
   width: min(100%, 680px);
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overflow-x: hidden;
   margin-top: 0.5rem;
-  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  padding: calc(1.1rem + env(safe-area-inset-top))
+    calc(1.1rem + env(safe-area-inset-right))
+    calc(1.1rem + env(safe-area-inset-bottom))
+    calc(1.1rem + env(safe-area-inset-left));
   border-radius: 28px;
+}
+
+.menu-drawer__top {
+  order: 1;
+  min-width: 0;
+}
+.menu-drawer__extras {
+  order: 2;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.menu-drawer__panel > #menuPrimaryCta {
+  order: 3;
+  min-height: 44px;
+}
+.menu-drawer__panel > .menu-nav {
+  order: 4;
+  min-width: 0;
+}
+body.menu-open {
+  overflow: hidden;
 }
 
 .menu-drawer__extras {

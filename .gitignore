@@ -1,6 +1,21 @@
 node_modules/
 .wrangler/
+
+# Runtime secrets
 public/.env
+public/.env.*
+!public/.env.example
+
+# Runtime/user data
+public/api/storage/*
+!public/api/storage/.gitkeep
+!public/api/storage/.htaccess
+
+# Generated/local artifacts
 arvectum-hosting-deploy.zip
-public/api/storage/*.jsonl
-public/api/storage/*.log
+.DS_Store
+__MACOSX/
+*.swp
+*.tmp
+*.bak
+*.backup

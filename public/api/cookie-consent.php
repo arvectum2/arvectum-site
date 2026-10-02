@@ -1,5 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
+header('Cache-Control: no-store');
+header('X-Content-Type-Options: nosniff');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
@@ -16,6 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $raw = file_get_contents('php://input');
+if (strlen((string) $raw) > 16384) {
+    http_response_code(413);
+    echo json_encode([
+        'ok' => false,
+        'error' => 'Payload too large',
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
 $data = json_decode((string) $raw, true);
 
 if (!is_array($data)) {

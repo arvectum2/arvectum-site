@@ -1,0 +1,5 @@
+# Cloudflare Pages proxy rewrites
+# Updates: remote pilot backend → CloudPub tunnel → Mac mini
+/pilot/tender-agent  https://punctually-ubiquitous-aphid.cloudpub.ru/pilot/tender-agent  200
+/demo/tender-agent   https://punctually-ubiquitous-aphid.cloudpub.ru/demo/tender-agent   200
+/api/demo/tender-agent/*  https://punctually-ubiquitous-aphid.cloudpub.ru/api/demo/tender-agent/*  200

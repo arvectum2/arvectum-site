@@ -1,9 +1,18 @@
 window.SITE_CONFIG = {
   defaultLanguage: "ru",
+  api: {
+    // Public origin only; pilot routes still require an explicit browser auth flow.
+    baseUrl: "https://punctually-ubiquitous-aphid.cloudpub.ru",
+    publicHealthPath: "/health",
+    tenderAgentPath: "/api/demo/tender-agent",
+    tenderAgentApiPath: "/api/demo/tender-agent",
+    tenderAgentUiPath: "/demo/tender-agent",
+  },
   routes: {
     home: "index.html",
     solutions: "solutions.html",
     procurementAiAgent: "services/ai-tender-agent.html",
+    aiTenderAgent: "services/ai-tender-agent.html",
     procurement: "solutions/procurement.html",
     documentWorkflow: "solutions/document-workflow.html",
     operationsAutomation: "solutions/operations.html",
@@ -33,6 +42,8 @@ window.SITE_CONFIG = {
         menuClose: "Закрыть меню",
         telegramLabel: "Телеграм",
         headerCta: "Связаться с нами",
+        agentLaunchLabel: "Запустить AI-агента",
+        testAccessLabel: "Тестовый доступ",
         pagesLabel: "Разделы",
         nav: [
           { slug: "home", label: "Главная" },
@@ -134,8 +145,8 @@ window.SITE_CONFIG = {
           contactValuePlaceholders: {
             telegram: "Например, @username",
             email: "Например, hello@company.ru",
-            phone: "Например, +7 (999) 123-45-67",
-            whatsapp: "Например, +7 (999) 123-45-67",
+            phone: "Необязательно",
+            whatsapp: "Необязательно",
             other: "Например, логин или адрес канала",
             default: "@username, email или номер",
           },
@@ -1334,6 +1345,8 @@ window.SITE_CONFIG = {
         menuClose: "Close menu",
         telegramLabel: "Telegram",
         headerCta: "Contact Us",
+        agentLaunchLabel: "Launch AI agent",
+        testAccessLabel: "Test access",
         pagesLabel: "Pages",
         nav: [
           { slug: "home", label: "Home" },
@@ -1429,8 +1442,8 @@ window.SITE_CONFIG = {
           contactValuePlaceholders: {
             telegram: "For example, @username",
             email: "For example, hello@company.com",
-            phone: "For example, +1 555 123 45 67",
-            whatsapp: "For example, +1 555 123 45 67",
+            phone: "Optional",
+            whatsapp: "Optional",
             other: "For example, username or channel details",
             default: "@username, email or phone",
           },

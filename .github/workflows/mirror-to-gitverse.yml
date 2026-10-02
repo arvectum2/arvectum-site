@@ -22,16 +22,13 @@ jobs:
     name: Mirror repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
     steps:
       - name: Validate configuration
         env:
           GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
-          GITVERSE_REPOSITORY: ${{ vars.GITVERSE_REPO }}
         run: |
           set -euo pipefail
-          test -n "$GITVERSE_TOKEN" || { echo "::error::GITVERSE_TOKEN is missing"; exit 1; }
-          test -n "$GITVERSE_REPOSITORY" || { echo "::error::GITVERSE_REPO is missing"; exit 1; }
+          test -n "${GITVERSE_TOKEN}" || { echo "::error::GITVERSE_TOKEN is missing"; exit 1; }
 
       - name: Clone GitHub repository as mirror
         env:
@@ -46,27 +43,20 @@ jobs:
       - name: Push branches and tags to GitVerse
         env:
           GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
-          GITVERSE_REPOSITORY: ${{ vars.GITVERSE_REPO }}
         run: |
           set -euo pipefail
           cd repository.git
-
           git remote add gitverse \
-            "https://arvectum:${GITVERSE_TOKEN}@gitverse.ru/arvectum/${GITVERSE_REPOSITORY}.git"
-
-          # Mirror only normal branches and tags.
-          # GitHub-specific refs/pull/* are intentionally excluded.
+            "https://arvectum:${GITVERSE_TOKEN}@gitverse.ru/arvectum/arvectum-site.git"
           git push --force --prune gitverse \
             'refs/heads/*:refs/heads/*' \
             'refs/tags/*:refs/tags/*'
 
       - name: Summary
         if: success()
-        env:
-          GITVERSE_REPOSITORY: ${{ vars.GITVERSE_REPO }}
         run: |
           echo "### GitVerse mirror updated" >> "$GITHUB_STEP_SUMMARY"
           echo "- Source: ${GITHUB_REPOSITORY}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Target: arvectum/${GITVERSE_REPOSITORY}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Target: arvectum/arvectum-site" >> "$GITHUB_STEP_SUMMARY"
           echo "- Trigger: ${GITHUB_EVENT_NAME}" >> "$GITHUB_STEP_SUMMARY"
           echo "- SHA: ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"
