@@ -119,59 +119,156 @@
     <main>
       <article>
         <h1>Политика конфиденциальности приложения «Фото под размер»</h1>
-        <p class="meta">Редакция от 25 сентября 2026 года</p>
+        <p class="meta">Редакция от 3 октября 2026 года</p>
         <p>Правообладатель приложения — ООО «Арвектум».</p>
 
-        <h2>1. Какие данные обрабатывает приложение</h2>
+        <h2>1. Обработка фотографий</h2>
         <p>
-          «Фото под размер» работает с изображениями, которые пользователь
-          самостоятельно выбирает через системный интерфейс Android. Обработка
-          выбранных изображений выполняется локально на устройстве пользователя.
+          «Фото под размер» работает только с изображениями, которые пользователь
+          самостоятельно выбирает через системный интерфейс iOS или Android.
+          Обработка изображения выполняется локально на устройстве. Содержимое
+          выбранных фотографий не загружается на серверы ООО «Арвектум» и не
+          передаётся рекламному SDK.
         </p>
 
-        <h2>2. Сбор и передача данных</h2>
-        <p>В текущей версии приложение:</p>
+        <h2>2. Учётные записи и серверная обработка</h2>
         <ul>
-          <li>
-            не требует регистрации и не создаёт пользовательские аккаунты;
-          </li>
-          <li>не загружает изображения на серверы ООО «Арвектум»;</li>
-          <li>не передаёт содержимое изображений третьим лицам;</li>
-          <li>не использует рекламные и аналитические SDK;</li>
-          <li>не имеет собственного backend;</li>
-          <li>не запрашивает доступ ко всей медиатеке устройства.</li>
+          <li>регистрация и пользовательский аккаунт не требуются;</li>
+          <li>собственного backend для обработки изображений нет;</li>
+          <li>исходные фотографии на серверах ООО «Арвектум» не хранятся;</li>
+          <li>приложение не запрашивает доступ ко всей медиатеке устройства.</li>
         </ul>
+
+        <h2>3. Реклама в iOS-версии</h2>
         <p>
-          Приложение получает доступ только к изображению, которое пользователь
-          явно выбрал через системный Android Photo Picker, и к месту
-          сохранения, которое пользователь выбирает через системный интерфейс.
+          В iOS-версии используется Yandex Mobile Ads SDK для показа рекламы.
+          Реклама поддерживает бесплатное распространение приложения и может
+          показываться независимо от выбора пользователя в настройках
+          рекламных данных.
+        </p>
+        <p>
+          При первом запуске пользователь выбирает, разрешать ли Yandex Mobile
+          Ads обработку данных для рекламы. Выбор сохраняется локально и
+          передаётся SDK при последующих запусках. Отказ от обработки рекламных
+          данных не отключает рекламу.
+        </p>
+        <p>
+          Если пользователь разрешил обработку рекламных данных, iOS может
+          отдельно показать системный запрос App Tracking Transparency (ATT).
+          Только при системном разрешении ATT рекламному SDK становится доступен
+          рекламный идентификатор IDFA. При отказе ATT реклама продолжает
+          показываться без доступа к IDFA.
+        </p>
+        <p>
+          Передача геолокации в Yandex Mobile Ads отключена. Приложение не
+          запрашивает разрешение геолокации для рекламы.
         </p>
 
-        <h2>3. Хранение файлов</h2>
+        <h2>4. Управление согласием и отслеживанием</h2>
+        <p>
+          Изменить выбор для Yandex Mobile Ads можно внутри приложения через
+          ссылку «Реклама и конфиденциальность». Системное разрешение ATT после
+          первого ответа изменяется в настройках iOS. Эти настройки не отключают
+          сам показ рекламы.
+        </p>
+
+        <h2>5. Сохранение и временные файлы</h2>
         <p>
           Исходный файл не изменяется. Результат сохраняется только по команде
           пользователя либо передаётся через системное меню «Поделиться».
-          Временные файлы могут находиться в локальном кэше приложения и
-          удаляться системой Android или самим приложением.
+          Временные рабочие файлы могут находиться в локальном кэше приложения и
+          удаляться операционной системой или самим приложением.
         </p>
 
-        <h2>4. Подключение к интернету</h2>
+        <h2>6. Подключение к интернету и третьи лица</h2>
         <p>
-          Текущая версия приложения не требует доступа к интернету для основной
-          работы и не содержит разрешение <code>INTERNET</code>.
+          Основная функция обработки фотографий не требует интернета. В
+          iOS-версии интернет используется для загрузки и измерения рекламы через
+          Yandex Mobile Ads SDK и связанные компоненты. ООО «Арвектум» не
+          передаёт содержимое фотографий в рекламную сеть.
+        </p>
+        <p>
+          Обработка данных рекламным SDK регулируется также применимыми
+          документами и настройками Яндекса. ООО «Арвектум» не хранит IDFA или
+          данные рекламного профиля на собственных серверах.
         </p>
 
-        <h2>5. Изменения политики</h2>
+        <h2>7. Права пользователя и обращения</h2>
         <p>
-          Если в будущих версиях будут добавлены аналитика, реклама или другие
-          сетевые сервисы, эта политика будет обновлена до публикации
-          соответствующей версии.
+          Отозвать или изменить рекламное согласие можно средствами приложения,
+          а разрешение ATT — средствами iOS. По вопросам конфиденциальности и
+          обработки данных можно обратиться по адресу
+          <a href="mailto:info@arvectum.com">info@arvectum.com</a>.
         </p>
 
-        <h2>6. Контакты</h2>
+        <h2>8. Изменения политики</h2>
         <p>
-          Сайт правообладателя: <a href="https://arvectum.com/">arvectum.com</a>
+          Политика обновляется при изменении функциональности приложения,
+          состава подключённых сервисов или применимых требований.
         </p>
+
+        <h2>9. Контакты</h2>
+        <p>
+          ООО «Арвектум» ·
+          <a href="https://arvectum.com/">arvectum.com</a> ·
+          <a href="mailto:info@arvectum.com">info@arvectum.com</a>
+        </p>
+
+        <hr style="margin: 36px 0; border: 0; border-top: 1px solid #d9e1e8" />
+
+        <h1 lang="en">Photo Resize privacy policy</h1>
+        <p class="meta" lang="en">Effective October 3, 2026</p>
+        <div lang="en">
+          <p>The app is provided by LLC ARVECTUM.</p>
+
+          <h2>1. Photos</h2>
+          <p>
+            Photos are selected explicitly through the iOS or Android system
+            picker and processed locally on the device. Photo contents are not
+            uploaded to Arvectum servers and are not sent to the advertising SDK.
+          </p>
+
+          <h2>2. Ads and device data on iOS</h2>
+          <p>
+            The iOS app uses Yandex Mobile Ads SDK. Ads remain enabled regardless
+            of the user's advertising-data choice. On first launch the user can
+            allow or decline advertising-SDK data processing; that choice is
+            stored locally and supplied to the SDK on later launches.
+          </p>
+          <p>
+            If advertising-data processing is allowed, iOS may separately show
+            the App Tracking Transparency (ATT) prompt. IDFA is available to the
+            advertising SDK only when ATT permission is granted. If ATT is
+            denied, ads still appear without IDFA access. Location forwarding to
+            Yandex Mobile Ads is disabled and the app does not request location
+            permission for advertising.
+          </p>
+
+          <h2>3. Privacy choices</h2>
+          <p>
+            The Yandex advertising-data choice can be changed from
+            “Ads &amp; Privacy” inside the app. ATT permission can be changed in
+            iOS Settings after the system prompt has been answered. Neither
+            choice creates an ad-free mode.
+          </p>
+
+          <h2>4. Storage and network use</h2>
+          <p>
+            The source file is not modified. Output is saved or shared only on
+            the user's command. Temporary working files may remain in the local
+            app cache until removed by the operating system or the app. Internet
+            access is not required for image processing; on iOS it is used to
+            load and measure ads through Yandex Mobile Ads and related
+            components. Arvectum does not store IDFA or advertising-profile data
+            on its own servers.
+          </p>
+
+          <h2>5. Contact</h2>
+          <p>
+            Privacy questions can be sent to
+            <a href="mailto:info@arvectum.com">info@arvectum.com</a>.
+          </p>
+        </div>
       </article>
     </main>
     <footer>© Arvectum</footer>
