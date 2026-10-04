@@ -24,7 +24,9 @@
     "data:search": "node scripts/data-platform/search-site.mjs",
     "data:discover": "node scripts/data-platform/discover-web.mjs",
     "data:research": "node scripts/data-platform/research-web.mjs",
-    "data:research:search": "node scripts/data-platform/search-research.mjs"
+    "data:research:search": "node scripts/data-platform/search-research.mjs",
+    "data:products": "node scripts/data-platform/index-products.mjs",
+    "data:products:search": "node scripts/data-platform/search-products.mjs"
   },
   "devDependencies": {
     "prettier": "^3.8.4",

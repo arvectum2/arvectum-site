@@ -94,18 +94,18 @@ export function manifestFor(entries) {
   };
 }
 
-export async function readState() {
+export async function readState(stateFile = STATE_FILE) {
   try {
-    return JSON.parse(await readFile(STATE_FILE, "utf8"));
+    return JSON.parse(await readFile(stateFile, "utf8"));
   } catch (error) {
     if (error?.code === "ENOENT") return null;
     throw error;
   }
 }
 
-export async function writeState(state) {
-  await mkdir(path.dirname(STATE_FILE), { recursive: true });
-  await writeFile(STATE_FILE, JSON.stringify(state, null, 2) + "\n", "utf8");
+export async function writeState(state, stateFile = STATE_FILE) {
+  await mkdir(path.dirname(stateFile), { recursive: true });
+  await writeFile(stateFile, JSON.stringify(state, null, 2) + "\n", "utf8");
 }
 
 export async function ensureCollection(
