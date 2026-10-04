@@ -11,6 +11,26 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # One public origin: HTTPS apex host.
+  RewriteCond %{HTTP_HOST} ^www\.arvectum\.com$ [NC]
+  RewriteCond %{THE_REQUEST} \s/+index\.html(?:[?\s]) [NC]
+  RewriteRule ^index\.html$ https://arvectum.com/ [R=301,L,NE]
+
+  RewriteCond %{HTTP_HOST} ^www\.arvectum\.com$ [NC]
+  RewriteRule ^ https://arvectum.com%{REQUEST_URI} [R=301,L,NE]
+
+  # Retire legacy URLs previously discovered by search crawlers.
+  RewriteRule ^ru/?$ / [R=301,L]
+  RewriteRule ^solutions/index\.html$ /solutions.html [R=301,L]
+  RewriteRule ^materials/index\.html$ /materials.html [R=301,L]
+  RewriteRule ^solutions/(approach|privacy|personal-data-consent|contact|solutions)\.html$ /$1.html [R=301,L,NE]
+  RewriteRule ^materials/(cookies|contact|privacy|personal-data-consent|approach|solutions)\.html$ /$1.html [R=301,L,NE]
+
+  # Avoid duplicate root /index.html in search indexes.
+  RewriteCond %{THE_REQUEST} \s/+index\.html(?:[?\s]) [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+
   RewriteRule (^|/)\.env$ - [F,L,NC]
   RewriteRule ^api/storage/ - [F,L,NC]
 </IfModule>

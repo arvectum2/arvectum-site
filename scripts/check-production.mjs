@@ -7,7 +7,30 @@ const checks = [
   },
   {
     url: "https://www.arvectum.com/",
-    ok: ({ status }) => status === 200 || status === 301 || status === 302,
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) && location === "https://arvectum.com/",
+  },
+  {
+    url: "https://arvectum.com/index.html",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) && location === "https://arvectum.com/",
+  },
+  {
+    url: "https://arvectum.com/ru",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) && location === "https://arvectum.com/",
+  },
+  {
+    url: "https://arvectum.com/solutions/approach.html?lang=en",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/approach.html?lang=en",
+  },
+  {
+    url: "https://arvectum.com/materials/index.html?lang=en",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/materials.html?lang=en",
   },
   {
     url: "https://arvectum.com/health.html",
@@ -176,6 +199,7 @@ const parseCurlResponse = (raw) => {
     status,
     body,
     contentType: headers.get("content-type") || "",
+    location: headers.get("location") || "",
   };
 };
 
@@ -191,6 +215,7 @@ for (const item of checks) {
     console.log(`${passed ? "PASS" : "FAIL"} ${item.url}`);
     console.log(`  status: ${result.status}`);
     console.log(`  content-type: ${result.contentType || "(missing)"}`);
+    if (result.location) console.log(`  location: ${result.location}`);
     console.log(`  body: ${normalizeSnippet(result.body)}`);
   } catch (error) {
     hasFailures = true;

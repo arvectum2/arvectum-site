@@ -33,6 +33,9 @@ jobs:
       - name: Sitemap freshness
         run: node scripts/seo-generate-sitemap.mjs --check
 
+      - name: SEO quality
+        run: node scripts/check-seo-quality.mjs
+
       - name: Static site checks
         run: node scripts/check-static.mjs
 
