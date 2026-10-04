@@ -130,3 +130,17 @@ node scripts/data-platform/discover-web.mjs "photo resize iphone app"
 ```
 
 The discovery command is intentionally separate from the site index. A zero-result response is treated as an external-source outcome, not as permission to broaden or silently switch providers.
+
+
+### Versioned external research collections
+
+Discovery results can be materialized into a bounded research collection:
+
+```bash
+node scripts/data-platform/research-web.mjs --limit 5 --min-success 3 "photo resize iphone app"
+node scripts/data-platform/search-research.mjs "resize image exact file size kilobytes iphone"
+```
+
+The research command first discovers a fixed URL set, creates a deterministic versioned collection, and then ingests each external URL through Data Platform. Fetch failures are reported explicitly and stored in the runtime research state; there is no silent snippet fallback. A research revision becomes active only when the configured minimum number of pages succeeds and collection stats confirm matching resources/documents plus complete chunk embeddings.
+
+Research state is stored outside Git under the Arvectum runtime directory unless `DATA_PLATFORM_RESEARCH_STATE_FILE` overrides it.
