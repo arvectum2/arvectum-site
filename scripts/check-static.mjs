@@ -226,7 +226,7 @@ for (const fileName of htmlFiles) {
     `${fileName}: missing apple-touch-icon link`,
   );
   record(
-    /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico\?v=20260616-seo24"/i.test(
+    /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico"/i.test(
       html,
     ),
     `${fileName}: missing shortcut icon link`,
