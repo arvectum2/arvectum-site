@@ -90,3 +90,43 @@ SEO is part of the delivery pipeline rather than a manual webmaster task:
 - `scripts/seo-weekly-report.mjs` captures recurring search-engine evidence.
 
 Credentials and reports remain outside Git. See `docs/seo/AUTOMATION.md`.
+
+
+## Data Platform growth search
+
+The site repository is a consumer of the shared Arvectum Data Platform for SEO/Growth research. SEO rules, sitemap generation and search-engine submission stay in this repository; Data Platform only owns reusable indexing and retrieval.
+
+Commands:
+
+```bash
+node scripts/data-platform/index-site.mjs --dry-run
+node scripts/data-platform/index-site.mjs
+node scripts/data-platform/search-site.mjs "агент для тендерного отдела"
+```
+
+`data:index` reads the canonical URLs from `public/sitemap.xml`, hashes the corresponding local HTML files, and creates a deterministic versioned collection:
+
+```text
+growth:arvectum-site:<manifest-revision>
+```
+
+The active collection switches only after every sitemap page is ingested and collection statistics confirm that resources, documents, chunks and embeddings are complete. The active revision is stored outside Git by default under the Arvectum runtime directory.
+
+`data:search` searches only the active site collection and prints the canonical URL plus Data Platform evidence identifiers for every result.
+
+Environment overrides:
+
+```text
+DATA_PLATFORM_URL=http://127.0.0.1:8094
+DATA_PLATFORM_API_KEY=
+DATA_PLATFORM_STATE_FILE=<optional custom state path>
+```
+
+
+For external research discovery through the shared connector registry:
+
+```bash
+node scripts/data-platform/discover-web.mjs "photo resize iphone app"
+```
+
+The discovery command is intentionally separate from the site index. A zero-result response is treated as an external-source outcome, not as permission to broaden or silently switch providers.
