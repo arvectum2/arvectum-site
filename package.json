@@ -18,7 +18,11 @@
     "lint:format": "node ./node_modules/prettier/bin/prettier.cjs --check \"public/**/*.{html,css,js}\" README.md",
     "lint:php": "php -l public/api/submit.php && php -l public/api/cookie-consent.php && php -l public/api/health.php",
     "verify": "npm run check && npm run lint:php",
-    "lint": "npm run verify"
+    "lint": "npm run verify",
+    "data:index": "node scripts/data-platform/index-site.mjs",
+    "data:index:dry": "node scripts/data-platform/index-site.mjs --dry-run",
+    "data:search": "node scripts/data-platform/search-site.mjs",
+    "data:discover": "node scripts/data-platform/discover-web.mjs"
   },
   "devDependencies": {
     "prettier": "^3.8.4",
