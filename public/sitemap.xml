@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://arvectum.com/</loc>
-    <lastmod>2026-10-02</lastmod>
+    <lastmod>2026-10-04</lastmod>
   </url>
   <url>
     <loc>https://arvectum.com/about.html</loc>
@@ -155,6 +155,10 @@
   <url>
     <loc>https://arvectum.com/solutions/tender-department-ai-agent.html</loc>
     <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>https://arvectum.com/tools/index.html</loc>
+    <lastmod>2026-10-04</lastmod>
   </url>
   <url>
     <loc>https://arvectum.com/tools/photo-size/35x45.html</loc>
