@@ -65,19 +65,21 @@ Core Web Vitals had insufficient Chrome field data for both mobile and desktop a
 
 ## Yandex Webmaster observations
 
-The dashboard reported no errors and five recommendations.
+Two Webmaster properties are present and must not be conflated:
 
-Material recommendations still visible:
+- the legacy `http://arvectum.com` property still shows obsolete migration-era recommendations such as HTTPS, favicon and Sitemap;
+- the canonical `https://arvectum.com` property reports no diagnostic errors and is the property to use for current SEO work.
 
-- the robot was not yet using a Sitemap;
-- the property was still transitioning from the HTTP main address to HTTPS;
-- favicon was reported as not found;
-- add the organization to Yandex Business;
-- specify site region.
+For the canonical HTTPS property:
 
-The region change had already been submitted and was pending application to Russia. The HTTPS migration was also already pending. Neither should be duplicated.
+- the Sitemap is accepted with status `OK`; the last UI load shown before this release was 2026-09-10 with 35 URLs;
+- current indexing checks are green;
+- the remaining Webmaster recommendations are to specify a site region and optionally add the organization to Yandex Business;
+- Yandex already shows fresh discovery of the Photo Size landing pages on 2026-10-04.
 
-The sitemap https://arvectum.com/sitemap.xml had been submitted earlier but remained queued for processing in the current HTTP property.
+Observed Yandex query demand includes `rfq тендер`, `rfq что это такое в закупках`, `сравнение ткп`, `сравнительный анализ ткп` and brand queries for ООО «Арвектум».
+
+The Yandex Business recommendation is not an automatic technical fix: publishing a business card can expose a physical address, so it requires an explicit business-location decision.
 
 ## Implemented changes
 
