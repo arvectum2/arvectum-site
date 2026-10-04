@@ -14,6 +14,8 @@
     "seo:google": "node scripts/seo-google.mjs report",
     "seo:yandex": "node scripts/seo-yandex.mjs report",
     "seo:weekly": "node scripts/seo-weekly-report.mjs",
+    "growth:index": "node scripts/growth-data-platform.mjs index-site",
+    "growth:status": "node scripts/growth-data-platform.mjs status",
     "check:production": "node scripts/check-production.mjs",
     "lint:format": "node ./node_modules/prettier/bin/prettier.cjs --check \"public/**/*.{html,css,js}\" README.md",
     "lint:php": "php -l public/api/submit.php && php -l public/api/cookie-consent.php && php -l public/api/health.php",

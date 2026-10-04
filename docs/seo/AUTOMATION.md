@@ -92,3 +92,36 @@ The Yandex adapter discovers the user and verified `arvectum.com` host through W
 - top queries by impressions and clicks.
 
 IndexNow is separate from Webmaster OAuth and is used for the changed-URL notification path.
+
+
+## Data Platform research index
+
+The existing SEO pipeline remains responsible for sitemap generation, IndexNow, Google Search Console and Yandex Webmaster. Data Platform is a separate research/search layer and does not publish or submit URLs to search engines.
+
+The current site revision can be indexed into a deterministic collection:
+
+```bash
+npm run growth:index
+```
+
+Collection naming:
+
+```text
+growth:arvectum-site:<git-sha>
+```
+
+Check whether the current revision is indexed:
+
+```bash
+npm run growth:status
+```
+
+Search the current revision:
+
+```bash
+node scripts/growth-data-platform.mjs search "автоматизация закупок AI"
+```
+
+By default the client uses the localhost Data Platform service at `http://127.0.0.1:8094`. Override it with `ARVECTUM_DATA_BASE_URL` when an authorized runtime requires another endpoint.
+
+The client uses the Data Platform sitemap connector, pre-existing public URLs, extraction and hybrid retrieval. It contains no search-engine credentials and does not replace the post-deploy SEO notification/monitoring flow.
