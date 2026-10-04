@@ -20,6 +20,13 @@ Options -Indexes
   RewriteCond %{HTTP_HOST} ^www\.arvectum\.com$ [NC]
   RewriteRule ^ https://arvectum.com%{REQUEST_URI} [R=301,L,NE]
 
+  # One canonical privacy policy for the company and its products.
+  RewriteRule ^(?:pushkin-privacy|photo-pod-razmer-privacy)\.html$ /privacy.html [R=301,L,NE]
+
+  # Consolidate competing commercial landing pages.
+  RewriteRule ^solutions/contract-risk-ai-review\.html$ /services/contract-risk-review.html [R=301,L,NE]
+  RewriteRule ^solutions/tender-department-ai-agent\.html$ /services/ai-tender-agent.html [R=301,L,NE]
+
   # Retire legacy URLs previously discovered by search crawlers.
   RewriteRule ^ru/?$ / [R=301,L]
   RewriteRule ^solutions/index\.html$ /solutions.html [R=301,L]

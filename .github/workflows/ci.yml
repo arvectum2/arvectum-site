@@ -36,6 +36,9 @@ jobs:
       - name: SEO quality
         run: node scripts/check-seo-quality.mjs
 
+      - name: Site graph
+        run: node scripts/check-site-graph.mjs
+
       - name: Static site checks
         run: node scripts/check-static.mjs
 
