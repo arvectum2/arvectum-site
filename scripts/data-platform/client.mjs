@@ -108,7 +108,14 @@ export async function writeState(state) {
   await writeFile(STATE_FILE, JSON.stringify(state, null, 2) + "\n", "utf8");
 }
 
-export async function ensureCollection(collectionId) {
+export async function ensureCollection(
+  collectionId,
+  {
+    owner = "growth",
+    name = "Arvectum public website",
+    defaultLanguage = "russian",
+  } = {},
+) {
   const lookup = await fetch(
     new URL(`/v1/collections/${encodeURIComponent(collectionId)}`, DATA_PLATFORM_URL),
     { headers: requestHeaders() },
@@ -124,9 +131,9 @@ export async function ensureCollection(collectionId) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       collection_id: collectionId,
-      owner: "growth",
-      name: "Arvectum public website",
-      default_language: "russian",
+      owner,
+      name,
+      default_language: defaultLanguage,
     }),
   });
   return created.json();
