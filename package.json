@@ -28,7 +28,8 @@
     "data:products": "node scripts/data-platform/index-products.mjs",
     "data:products:search": "node scripts/data-platform/search-products.mjs",
     "data:entities": "node scripts/data-platform/sync-entities.mjs",
-    "data:entities:dry": "node scripts/data-platform/sync-entities.mjs --dry-run"
+    "data:entities:dry": "node scripts/data-platform/sync-entities.mjs --dry-run",
+    "data:intents:check": "node scripts/check-data-platform-intents.mjs"
   },
   "devDependencies": {
     "prettier": "^3.8.4",
