@@ -26,7 +26,9 @@
     "data:research": "node scripts/data-platform/research-web.mjs",
     "data:research:search": "node scripts/data-platform/search-research.mjs",
     "data:products": "node scripts/data-platform/index-products.mjs",
-    "data:products:search": "node scripts/data-platform/search-products.mjs"
+    "data:products:search": "node scripts/data-platform/search-products.mjs",
+    "data:entities": "node scripts/data-platform/sync-entities.mjs",
+    "data:entities:dry": "node scripts/data-platform/sync-entities.mjs --dry-run"
   },
   "devDependencies": {
     "prettier": "^3.8.4",

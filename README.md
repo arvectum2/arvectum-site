@@ -158,3 +158,22 @@ node scripts/data-platform/search-products.mjs "уменьшить фото до
 Each product landing page becomes one pre-chunked metadata document containing its canonical URL, product heading, page title, meta description and section headings. The collection is independent from the full site index, so product discovery can search concise product metadata without ranking against long marketing pages.
 
 The index is derived from public landing pages only. A product is not invented or added manually before it has a public `/tools/<product>/index.html` page; future product pages are included automatically.
+
+
+### Product entity sync
+
+Published product metadata can also seed the shared deterministic entity layer.
+
+Commands:
+
+    npm run data:entities:dry
+    npm run data:entities
+
+The sync resolves stable identifiers before creating anything:
+
+- organization Arvectum uses domain arvectum.com;
+- each published product uses its canonical product URL;
+- organization-to-product edges use relation type publishes;
+- every relation is backed by the exact product-search evidence chain from the active product collection.
+
+The sync fails on ambiguous identifiers and is safe to repeat: existing entities are reused and relation IDs are deterministic.
