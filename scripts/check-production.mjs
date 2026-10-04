@@ -81,7 +81,7 @@ const checks = [
   {
     url: "https://arvectum.com/solutions/ai-document-checks.html",
     ok: ({ status, body }) =>
-      status === 200 && body.includes("Проверка документов с AI"),
+      status === 200 && body.includes("Проверка документов с ИИ"),
   },
   {
     url: "https://arvectum.com/materials.html",
