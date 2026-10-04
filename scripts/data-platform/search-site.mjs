@@ -1,3 +1,4 @@
+import { rankPreferredLanding, preferredLanding } from "./landing-intents.mjs";
 import {
   DATA_PLATFORM_URL,
   dataPlatformFetch,
@@ -17,24 +18,62 @@ if (!state?.active_collection_id) {
   );
 }
 
+const resultLimit = 8;
 const response = await dataPlatformFetch("/v1/search", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     query,
     collections: [state.active_collection_id],
-    limit: 8,
+    limit: resultLimit,
     mode: "hybrid",
   }),
 });
 const payload = await response.json();
 
+const preference = preferredLanding(query);
+let fallbackHits = [];
+if (
+  preference &&
+  !(payload.hits || []).some(
+    (hit) => hit?.canonical_uri === preference.canonicalUri,
+  )
+) {
+  const fallbackResponse = await dataPlatformFetch("/v1/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      collections: [state.active_collection_id],
+      filters: {
+        canonical_uri: [preference.canonicalUri],
+      },
+      limit: 1,
+      mode: "hybrid",
+    }),
+  });
+  const fallbackPayload = await fallbackResponse.json();
+  fallbackHits = fallbackPayload.hits || [];
+}
+
+const ranked = rankPreferredLanding(
+  query,
+  payload.hits || [],
+  fallbackHits,
+  { limit: resultLimit },
+);
+
 console.log("Data Platform:", DATA_PLATFORM_URL);
 console.log("Collection:", state.active_collection_id);
 console.log("Query:", query);
-console.log("Hits:", payload.hits?.length || 0);
+console.log("Hits:", ranked.hits.length);
+if (ranked.preference) {
+  console.log(
+    `Preferred landing: ${ranked.preference.intentId} -> ${ranked.preference.canonicalUri} (${ranked.status})`,
+  );
+}
 
-for (const [index, hit] of (payload.hits || []).entries()) {
+for (const [index, hit] of ranked.hits.entries()) {
   const score = hit.scores?.fusion ?? 0;
   console.log("");
   console.log(`#${index + 1} score=${score.toFixed(6)}`);
