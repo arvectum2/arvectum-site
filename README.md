@@ -144,3 +144,17 @@ node scripts/data-platform/search-research.mjs "resize image exact file size kil
 The research command first discovers a fixed URL set, creates a deterministic versioned collection, and then ingests each external URL through Data Platform. Fetch failures are reported explicitly and stored in the runtime research state; there is no silent snippet fallback. A research revision becomes active only when the configured minimum number of pages succeeds and collection stats confirm matching resources/documents plus complete chunk embeddings.
 
 Research state is stored outside Git under the Arvectum runtime directory unless `DATA_PLATFORM_RESEARCH_STATE_FILE` overrides it.
+
+
+### Product metadata collection
+
+Public product landing pages under `public/tools/*/index.html` are indexed into a separate versioned metadata collection:
+
+```bash
+node scripts/data-platform/index-products.mjs
+node scripts/data-platform/search-products.mjs "уменьшить фото до 500 КБ на iPhone"
+```
+
+Each product landing page becomes one pre-chunked metadata document containing its canonical URL, product heading, page title, meta description and section headings. The collection is independent from the full site index, so product discovery can search concise product metadata without ranking against long marketing pages.
+
+The index is derived from public landing pages only. A product is not invented or added manually before it has a public `/tools/<product>/index.html` page; future product pages are included automatically.
