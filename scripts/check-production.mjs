@@ -33,6 +33,30 @@ const checks = [
       location === "https://arvectum.com/materials.html?lang=en",
   },
   {
+    url: "https://arvectum.com/pushkin-privacy.html",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/privacy.html",
+  },
+  {
+    url: "https://arvectum.com/photo-pod-razmer-privacy.html",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/privacy.html",
+  },
+  {
+    url: "https://arvectum.com/solutions/contract-risk-ai-review.html",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/services/contract-risk-review.html",
+  },
+  {
+    url: "https://arvectum.com/solutions/tender-department-ai-agent.html",
+    ok: ({ status, location }) =>
+      [301, 302, 308].includes(status) &&
+      location === "https://arvectum.com/services/ai-tender-agent.html",
+  },
+  {
     url: "https://arvectum.com/health.html",
     ok: ({ status, body }) =>
       status === 200 && body.includes("Arvectum site is online"),
@@ -86,8 +110,18 @@ const checks = [
   {
     url: "https://arvectum.com/materials.html",
     ok: ({ status, body }) =>
+      status === 200 && body.includes("Материалы по AI-автоматизации закупок"),
+  },
+  {
+    url: "https://arvectum.com/tools/index.html",
+    ok: ({ status, body }) =>
       status === 200 &&
-      body.includes("Материалы по AI-автоматизации закупок"),
+      body.includes("Простые инструменты для конкретных задач"),
+  },
+  {
+    url: "https://arvectum.com/privacy.html",
+    ok: ({ status, body }) =>
+      status === 200 && body.includes("Политика обработки персональных данных"),
   },
   {
     url: "https://arvectum.com/materials/how-to-choose-first-process.html",
