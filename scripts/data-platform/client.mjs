@@ -3,6 +3,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { DataPlatformClient } from "@arvectum/data-platform-client";
+
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(SCRIPT_DIR, "../..");
 export const PUBLIC_ROOT = path.join(REPO_ROOT, "public");
@@ -22,26 +24,18 @@ export const STATE_FILE =
     "data-platform-state.json",
   );
 
-export function requestHeaders(extra = {}) {
-  const headers = { ...extra };
-  if (process.env.DATA_PLATFORM_API_KEY) {
-    headers["X-Arvectum-Key"] = process.env.DATA_PLATFORM_API_KEY;
-  }
-  return headers;
-}
+export const dataPlatform = new DataPlatformClient({
+  baseUrl: DATA_PLATFORM_URL,
+  apiKey: process.env.DATA_PLATFORM_API_KEY || "",
+  consumer: process.env.DATA_PLATFORM_CONSUMER || "",
+  consumerKey: process.env.DATA_PLATFORM_CONSUMER_KEY || "",
+});
 
-export async function dataPlatformFetch(route, options = {}) {
-  const response = await fetch(new URL(route, DATA_PLATFORM_URL), {
-    ...options,
-    headers: requestHeaders(options.headers || {}),
-  });
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(
-      `Data Platform ${options.method || "GET"} ${route} returned ${response.status}: ${body.slice(0, 500)}`,
-    );
-  }
-  return response;
+let contractPromise = null;
+
+export function ensureConsumerContract() {
+  contractPromise ||= dataPlatform.requireContract(1);
+  return contractPromise;
 }
 
 export function sha256(value) {
@@ -64,7 +58,9 @@ export async function readSitemapEntries() {
       throw new Error(`Unexpected sitemap hostname: ${url.hostname}`);
     }
     const relativePath =
-      url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
+      url.pathname === "/"
+        ? "index.html"
+        : decodeURIComponent(url.pathname.slice(1));
     const filePath = path.join(PUBLIC_ROOT, relativePath);
     const content = await readFile(filePath);
     const html = content.toString("utf8");
@@ -116,49 +112,27 @@ export async function ensureCollection(
     defaultLanguage = "russian",
   } = {},
 ) {
-  const lookup = await fetch(
-    new URL(`/v1/collections/${encodeURIComponent(collectionId)}`, DATA_PLATFORM_URL),
-    { headers: requestHeaders() },
-  );
-  if (lookup.ok) return lookup.json();
-  if (lookup.status !== 404) {
-    throw new Error(
-      `Data Platform collection lookup returned ${lookup.status}: ${await lookup.text()}`,
-    );
-  }
-  const created = await dataPlatformFetch("/v1/collections", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      collection_id: collectionId,
-      owner,
-      name,
-      default_language: defaultLanguage,
-    }),
+  await ensureConsumerContract();
+  return dataPlatform.ensureCollection(collectionId, {
+    owner,
+    name,
+    defaultLanguage,
   });
-  return created.json();
 }
 
 export async function ingestHtml(entry, collectionId) {
-  const form = new FormData();
-  form.set("collection_id", collectionId);
-  form.set("title", entry.title);
-  form.set("canonical_uri", entry.canonicalUri);
-  form.set(
-    "file",
-    new Blob([entry.content], { type: "text/html; charset=utf-8" }),
-    path.basename(entry.filePath),
-  );
-  const response = await dataPlatformFetch("/v1/ingest/document", {
-    method: "POST",
-    body: form,
+  await ensureConsumerContract();
+  return dataPlatform.ingestDocument({
+    collectionId,
+    canonicalUri: entry.canonicalUri,
+    title: entry.title,
+    content: entry.content,
+    filename: path.basename(entry.filePath),
+    contentType: "text/html; charset=utf-8",
   });
-  return response.json();
 }
 
 export async function collectionStats(collectionId) {
-  const response = await dataPlatformFetch(
-    `/v1/collections/${encodeURIComponent(collectionId)}/stats`,
-  );
-  return response.json();
+  await ensureConsumerContract();
+  return dataPlatform.collectionStats(collectionId);
 }

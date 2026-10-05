@@ -6,7 +6,7 @@ import {
   REPO_ROOT,
   STATE_FILE,
   collectionStats,
-  dataPlatformFetch,
+  dataPlatform,
   ensureCollection,
   sha256,
   writeState,
@@ -23,7 +23,9 @@ function decodeHtml(value) {
 }
 
 function textFromTag(html, tag) {
-  const match = html.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+  const match = html.match(
+    new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"),
+  );
   if (!match) return "";
   return decodeHtml(match[1].replace(/<[^>]+>/g, " "));
 }
@@ -62,7 +64,9 @@ async function productEntries() {
   const toolsRoot = path.join(PUBLIC_ROOT, "tools");
   const dirs = await readdir(toolsRoot, { withFileTypes: true });
   const entries = [];
-  for (const dir of dirs.filter((item) => item.isDirectory()).sort((a, b) => a.name.localeCompare(b.name))) {
+  for (const dir of dirs
+    .filter((item) => item.isDirectory())
+    .sort((a, b) => a.name.localeCompare(b.name))) {
     const filePath = path.join(toolsRoot, dir.name, "index.html");
     let html;
     try {
@@ -101,7 +105,9 @@ async function productEntries() {
     });
   }
   if (!entries.length) {
-    throw new Error("No public product landing pages found under public/tools/*/index.html");
+    throw new Error(
+      "No public product landing pages found under public/tools/*/index.html",
+    );
   }
   return entries;
 }
@@ -121,22 +127,15 @@ await ensureCollection(collectionId, {
 });
 
 for (const [index, entry] of entries.entries()) {
-  const form = new FormData();
-  form.set("collection_id", collectionId);
-  form.set("title", entry.title);
-  form.set("canonical_uri", entry.canonical);
-  form.set("pre_chunked", "true");
-  form.set(
-    "file",
-    new Blob([entry.text], { type: "text/plain; charset=utf-8" }),
-    `${entry.productId}.txt`,
-  );
-
-  const response = await dataPlatformFetch("/v1/ingest/document", {
-    method: "POST",
-    body: form,
+  const result = await dataPlatform.ingestDocument({
+    collectionId,
+    canonicalUri: entry.canonical,
+    title: entry.title,
+    content: entry.text,
+    filename: `${entry.productId}.txt`,
+    contentType: "text/plain; charset=utf-8",
+    preChunked: true,
   });
-  const result = await response.json();
   console.log(
     `[${index + 1}/${entries.length}] ${entry.productId}: chunks=${result.chunks || 0}, embeddings=${result.embeddings || 0}`,
   );
