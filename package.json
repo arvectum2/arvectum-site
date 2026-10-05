@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ./node_modules/wrangler/bin/wrangler.js pages dev public --port 8788",
-    "check": "node scripts/check-repository.mjs && node scripts/check-js.mjs && node scripts/check-data-platform-sdk.mjs && node scripts/seo-generate-sitemap.mjs --check && node scripts/check-seo-quality.mjs && node scripts/check-site-graph.mjs && node scripts/check-static.mjs && node scripts/check-assets.mjs",
+    "check": "node scripts/check-repository.mjs && node scripts/check-js.mjs && node scripts/check-data-platform-sdk.mjs && node scripts/check-data-platform-presets.mjs && node scripts/seo-generate-sitemap.mjs --check && node scripts/check-seo-quality.mjs && node scripts/check-site-graph.mjs && node scripts/check-static.mjs && node scripts/check-assets.mjs",
     "check:repo": "node scripts/check-repository.mjs",
     "check:js": "node scripts/check-js.mjs",
     "check:static": "node scripts/check-static.mjs",
@@ -31,10 +31,11 @@
     "data:products:search": "node scripts/data-platform/search-products.mjs",
     "data:entities": "node scripts/data-platform/sync-entities.mjs",
     "data:entities:dry": "node scripts/data-platform/sync-entities.mjs --dry-run",
-    "data:intents:check": "node scripts/check-data-platform-intents.mjs"
+    "data:intents:check": "node scripts/check-data-platform-intents.mjs",
+    "data:presets:check": "node scripts/check-data-platform-presets.mjs"
   },
   "devDependencies": {
-    "@arvectum/data-platform-client": "file:vendor/arvectum-data-platform-client-0.2.0.tgz",
+    "@arvectum/data-platform-client": "file:vendor/arvectum-data-platform-client-0.3.0.tgz",
     "prettier": "^3.8.4",
     "wrangler": "^4.0.0"
   },

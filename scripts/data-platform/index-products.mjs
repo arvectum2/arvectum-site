@@ -11,6 +11,7 @@ import {
   sha256,
   writeState,
 } from "./client.mjs";
+import { productCollectionId } from "./presets.mjs";
 
 function decodeHtml(value) {
   return value
@@ -118,7 +119,7 @@ const manifestText = entries
   .sort()
   .join("\n");
 const revision = sha256(manifestText).slice(0, 16);
-const collectionId = `growth:products:${revision}`;
+const collectionId = productCollectionId(revision);
 
 await ensureCollection(collectionId, {
   owner: "growth-products",

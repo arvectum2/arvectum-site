@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { REPO_ROOT, dataPlatform, ensureConsumerContract } from "./client.mjs";
+import { GROWTH_SEARCH_PROFILE } from "./presets.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -86,10 +87,10 @@ async function ensureEntity({
 }
 
 async function exactProductHit(product) {
-  const payload = await dataPlatform.search({
+  const payload = await dataPlatform.searchWithProfile({
     query: product.title,
     collections: [state.active_collection_id],
-    mode: "hybrid",
+    profile: GROWTH_SEARCH_PROFILE,
     limit: 8,
   });
   const hit = (payload.hits || []).find(
