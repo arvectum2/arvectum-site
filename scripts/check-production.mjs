@@ -36,13 +36,13 @@ const checks = [
     url: "https://arvectum.com/pushkin-privacy.html",
     ok: ({ status, location }) =>
       [301, 302, 308].includes(status) &&
-      location === "https://arvectum.com/privacy.html",
+      location === "https://arvectum.com/privacy",
   },
   {
     url: "https://arvectum.com/photo-pod-razmer-privacy.html",
     ok: ({ status, location }) =>
       [301, 302, 308].includes(status) &&
-      location === "https://arvectum.com/privacy.html",
+      location === "https://arvectum.com/privacy",
   },
   {
     url: "https://arvectum.com/solutions/contract-risk-ai-review.html",
@@ -119,7 +119,7 @@ const checks = [
       body.includes("Простые инструменты для конкретных задач"),
   },
   {
-    url: "https://arvectum.com/privacy.html",
+    url: "https://arvectum.com/privacy",
     ok: ({ status, body }) =>
       status === 200 && body.includes("Политика обработки персональных данных"),
   },

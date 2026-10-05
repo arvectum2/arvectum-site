@@ -1,9 +1,9 @@
-# Cloudflare Pages proxy rewrites
+/privacy.html /privacy 301\n# Cloudflare Pages proxy rewrites
 # Updates: remote pilot backend → CloudPub tunnel → Mac mini
 /pilot/tender-agent  https://punctually-ubiquitous-aphid.cloudpub.ru/pilot/tender-agent  200
 /demo/tender-agent   https://punctually-ubiquitous-aphid.cloudpub.ru/demo/tender-agent   200
 /api/demo/tender-agent/*  https://punctually-ubiquitous-aphid.cloudpub.ru/api/demo/tender-agent/*  200
-/pushkin-privacy.html /privacy.html 301
-/photo-pod-razmer-privacy.html /privacy.html 301
+/pushkin-privacy.html /privacy 301
+/photo-pod-razmer-privacy.html /privacy 301
 /solutions/contract-risk-ai-review.html /services/contract-risk-review.html 301
 /solutions/tender-department-ai-agent.html /services/ai-tender-agent.html 301

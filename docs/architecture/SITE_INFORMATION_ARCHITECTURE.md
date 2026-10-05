@@ -55,14 +55,15 @@ Security, diagnostic and case pages stay separate when they provide distinct evi
 
 ## Privacy policy
 
-`/privacy.html` is the single canonical privacy/personal-data policy page for the website and Arvectum products.
+`/privacy` is the single canonical privacy/personal-data policy page for the website and all Arvectum products.
 
 Legacy product-specific policy URLs are permanent aliases:
 
-- `/pushkin-privacy.html` → `/privacy.html`
-- `/photo-pod-razmer-privacy.html` → `/privacy.html`
+- `/privacy.html` → `/privacy`
+- `/pushkin-privacy.html` → `/privacy`
+- `/photo-pod-razmer-privacy.html` → `/privacy`
 
-The routing decision does not by itself assert that the current policy text already covers every product-specific processing scenario. A new approved policy revision must update the canonical `/privacy.html` content when required.
+The routing decision does not by itself assert that the current policy text already covers every product-specific processing scenario. A new approved policy revision must update the canonical `/privacy` content when required.
 
 ## Retired competing routes
 

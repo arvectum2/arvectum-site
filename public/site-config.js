@@ -31,7 +31,7 @@ window.SITE_CONFIG = {
     localAiProcurement: "security/local-ai-procurement.html",
     tools: "tools/index.html",
     contact: "contact.html",
-    privacy: "privacy.html",
+    privacy: "/privacy",
     personalDataConsent: "personal-data-consent.html",
     cookiesPolicy: "cookies.html",
   },

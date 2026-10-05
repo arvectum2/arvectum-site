@@ -118,7 +118,9 @@ const resolvePublicPath = (fromRel, rawHref) => {
 const toCanonicalUrl = (relPath) =>
   relPath === "index.html"
     ? "https://arvectum.com/"
-    : `https://arvectum.com/${relPath}`;
+    : relPath === "privacy.html"
+      ? "https://arvectum.com/privacy"
+      : `https://arvectum.com/${relPath}`;
 
 const readHtml = (relPath) =>
   fs.readFileSync(path.join(publicDir, relPath), "utf8");
@@ -226,9 +228,7 @@ for (const fileName of htmlFiles) {
     `${fileName}: missing apple-touch-icon link`,
   );
   record(
-    /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico"/i.test(
-      html,
-    ),
+    /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico"/i.test(html),
     `${fileName}: missing shortcut icon link`,
   );
 
@@ -311,7 +311,7 @@ for (const fileName of htmlFiles) {
       `${fileName}: footer must contain company legal name`,
     );
     for (const legalLink of [
-      "privacy.html",
+      "/privacy",
       "personal-data-consent.html",
       "cookies.html",
     ]) {
@@ -587,7 +587,9 @@ for (const url of sitemapUrls) {
   const relPath =
     url === "https://arvectum.com/"
       ? "index.html"
-      : url.replace("https://arvectum.com/", "");
+      : url === "https://arvectum.com/privacy"
+        ? "privacy.html"
+        : url.replace("https://arvectum.com/", "");
   record(
     htmlSet.has(relPath),
     `sitemap.xml: URL points to non-existing file -> ${url}`,

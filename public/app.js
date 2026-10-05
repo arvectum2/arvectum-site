@@ -1119,7 +1119,7 @@
             <input
               type="hidden"
               name="consentPolicyUrl"
-              value="https://arvectum.com/privacy.html"
+              value="https://arvectum.com/privacy"
             />
             <input
               type="hidden"

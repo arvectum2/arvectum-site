@@ -183,7 +183,7 @@ $website = normalize_string($data['website'] ?? '');
 $personalDataConsentRaw = $data['personalDataConsent'] ?? '';
 $consentSource = normalize_string($data['consentSource'] ?? 'contact form');
 $consentDocumentUrl = normalize_string($data['consentDocumentUrl'] ?? 'https://arvectum.com/personal-data-consent.html');
-$consentPolicyUrl = normalize_string($data['consentPolicyUrl'] ?? 'https://arvectum.com/privacy.html');
+$consentPolicyUrl = normalize_string($data['consentPolicyUrl'] ?? 'https://arvectum.com/privacy');
 $consentVersion = normalize_string($data['consentVersion'] ?? 'pdn-2026-06-24');
 $consentTimestamp = gmdate('c');
 $personalDataConsent = $personalDataConsentRaw === true
