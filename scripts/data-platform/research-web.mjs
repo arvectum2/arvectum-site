@@ -9,6 +9,7 @@ import {
   ensureConsumerContract,
   sha256,
 } from "./client.mjs";
+import { researchCollectionId } from "./presets.mjs";
 
 const rawArgs = process.argv.slice(2);
 const queryParts = [];
@@ -59,7 +60,7 @@ const manifestText = [
 ].join("\n");
 const queryHash = sha256(query).slice(0, 10);
 const revision = sha256(manifestText).slice(0, 16);
-const collectionId = `growth:research:${queryHash}:${revision}`;
+const collectionId = researchCollectionId(queryHash, revision);
 
 await ensureCollection(collectionId, {
   owner: "growth-research",

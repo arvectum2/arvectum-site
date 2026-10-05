@@ -5,6 +5,7 @@ import {
   ensureConsumerContract,
   readState,
 } from "./client.mjs";
+import { GROWTH_SEARCH_PROFILE } from "./presets.mjs";
 
 const query = process.argv.slice(2).join(" ").trim();
 if (!query) {
@@ -21,11 +22,11 @@ if (!state?.active_collection_id) {
 
 const resultLimit = 8;
 await ensureConsumerContract();
-const payload = await dataPlatform.search({
+const payload = await dataPlatform.searchWithProfile({
   query,
   collections: [state.active_collection_id],
   limit: resultLimit,
-  mode: "hybrid",
+  profile: GROWTH_SEARCH_PROFILE,
 });
 
 const preference = preferredLanding(query);
@@ -36,14 +37,14 @@ if (
     (hit) => hit?.canonical_uri === preference.canonicalUri,
   )
 ) {
-  const fallbackPayload = await dataPlatform.search({
+  const fallbackPayload = await dataPlatform.searchWithProfile({
     query,
     collections: [state.active_collection_id],
     filters: {
       canonical_uri: [preference.canonicalUri],
     },
     limit: 1,
-    mode: "hybrid",
+    profile: GROWTH_SEARCH_PROFILE,
   });
   fallbackHits = fallbackPayload.hits || [];
 }

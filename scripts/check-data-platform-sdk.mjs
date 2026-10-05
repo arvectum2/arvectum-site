@@ -10,10 +10,10 @@ import {
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
-const artifactName = "arvectum-data-platform-client-0.2.0.tgz";
+const artifactName = "arvectum-data-platform-client-0.3.0.tgz";
 const artifactPath = path.join(repoRoot, "vendor", artifactName);
 const expectedSha256 =
-  "c7939bf18ddf2e09cae7b97b02ffe3ee2ff8646f3d47a63ec34245bd27d19e3a";
+  "3300a992887c5cbf3bc832f2abed0c83d13600863620e9bb8728b58b23e5260c";
 
 const artifact = await readFile(artifactPath);
 const actualSha256 = createHash("sha256").update(artifact).digest("hex");
@@ -59,7 +59,7 @@ const packageLock = await readFile(
   "utf8",
 );
 if (
-  !packageLock.includes("file:vendor/arvectum-data-platform-client-0.2.0.tgz")
+  !packageLock.includes("file:vendor/arvectum-data-platform-client-0.3.0.tgz")
 ) {
   throw new Error(
     "package-lock.json does not pin the vendored Data Platform SDK",

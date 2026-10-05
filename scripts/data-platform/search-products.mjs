@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { REPO_ROOT, dataPlatform, ensureConsumerContract } from "./client.mjs";
+import { GROWTH_SEARCH_PROFILE } from "./presets.mjs";
 
 const query = process.argv.slice(2).join(" ").trim();
 if (!query) {
@@ -27,11 +28,11 @@ if (!state.active_collection_id) {
 }
 
 await ensureConsumerContract();
-const payload = await dataPlatform.search({
+const payload = await dataPlatform.searchWithProfile({
   query,
   collections: [state.active_collection_id],
   limit: 8,
-  mode: "hybrid",
+  profile: GROWTH_SEARCH_PROFILE,
 });
 
 console.log("Collection:", state.active_collection_id);

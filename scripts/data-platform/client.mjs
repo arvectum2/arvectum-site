@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 import { DataPlatformClient } from "@arvectum/data-platform-client";
 
+import { siteCollectionId } from "./presets.mjs";
+
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(SCRIPT_DIR, "../..");
 export const PUBLIC_ROOT = path.join(REPO_ROOT, "public");
@@ -85,7 +87,7 @@ export function manifestFor(entries) {
   const revision = sha256(manifestText).slice(0, 16);
   return {
     revision,
-    collectionId: `growth:arvectum-site:${revision}`,
+    collectionId: siteCollectionId(revision),
     manifestHash: sha256(manifestText),
   };
 }
