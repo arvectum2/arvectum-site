@@ -1,10 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import {
-  REPO_ROOT,
-  dataPlatformFetch,
-} from "./client.mjs";
+import { REPO_ROOT, dataPlatform, ensureConsumerContract } from "./client.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -27,18 +24,15 @@ if (!Array.isArray(state.products) || !state.products.length) {
   throw new Error("Product state contains no products.");
 }
 
+await ensureConsumerContract();
+
 async function resolveExact(entityType, aliasKind, value) {
-  const response = await dataPlatformFetch("/v1/entities/resolve", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      entity_type: entityType,
-      value,
-      alias_kind: aliasKind,
-      limit: 20,
-    }),
+  const payload = await dataPlatform.resolveEntity({
+    entityType,
+    value,
+    aliasKind,
+    limit: 20,
   });
-  const payload = await response.json();
   if (payload.status === "ambiguous") {
     throw new Error(
       `Ambiguous entity identity for ${entityType}/${aliasKind}: ${value}`,
@@ -75,38 +69,29 @@ async function ensureEntity({
     };
   }
 
-  const response = await dataPlatformFetch("/v1/entities", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      entity_type: entityType,
-      canonical_name: canonicalName,
-      aliases: [
-        {
-          alias_kind: identifierKind,
-          value: identifierValue,
-          metadata: { stable_identifier: true },
-        },
-        ...aliases,
-      ],
-      metadata,
-    }),
+  const entity = await dataPlatform.createEntity({
+    entityType,
+    canonicalName,
+    aliases: [
+      {
+        alias_kind: identifierKind,
+        value: identifierValue,
+        metadata: { stable_identifier: true },
+      },
+      ...aliases,
+    ],
+    metadata,
   });
-  return { entity: await response.json(), created: true };
+  return { entity, created: true };
 }
 
 async function exactProductHit(product) {
-  const response = await dataPlatformFetch("/v1/search", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: product.title,
-      collections: [state.active_collection_id],
-      mode: "hybrid",
-      limit: 8,
-    }),
+  const payload = await dataPlatform.search({
+    query: product.title,
+    collections: [state.active_collection_id],
+    mode: "hybrid",
+    limit: 8,
   });
-  const payload = await response.json();
   const hit = (payload.hits || []).find(
     (item) => item.canonical_uri === product.canonical_uri,
   );
@@ -175,24 +160,19 @@ for (const product of state.products) {
   }
 
   if (!dryRun) {
-    const relationResponse = await dataPlatformFetch("/v1/entity-relations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        source_entity_id: organizationResult.entity.entity_id,
-        target_entity_id: productResult.entity.entity_id,
-        relation_type: "publishes",
-        source_collection_id: state.active_collection_id,
-        resource_id: evidence.resource_id,
-        document_id: evidence.document_id,
-        chunk_id: evidence.chunk_id,
-        metadata: {
-          canonical_uri: product.canonical_uri,
-          source: "arvectum-site",
-        },
-      }),
+    const relation = await dataPlatform.createEntityRelation({
+      sourceEntityId: organizationResult.entity.entity_id,
+      targetEntityId: productResult.entity.entity_id,
+      relationType: "publishes",
+      sourceCollectionId: state.active_collection_id,
+      resourceId: evidence.resource_id,
+      documentId: evidence.document_id,
+      chunkId: evidence.chunk_id,
+      metadata: {
+        canonical_uri: product.canonical_uri,
+        source: "arvectum-site",
+      },
     });
-    const relation = await relationResponse.json();
     relations += 1;
     console.log(
       `Product: ${product.product_id} -> ${productResult.entity.entity_id} (${

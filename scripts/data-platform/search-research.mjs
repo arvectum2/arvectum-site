@@ -1,10 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import {
-  REPO_ROOT,
-  dataPlatformFetch,
-} from "./client.mjs";
+import { REPO_ROOT, dataPlatform, ensureConsumerContract } from "./client.mjs";
 
 const args = process.argv.slice(2);
 const collectionAt = args.indexOf("--collection");
@@ -39,17 +36,13 @@ if (!collectionId) {
   throw new Error("No research collection is available.");
 }
 
-const response = await dataPlatformFetch("/v1/search", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    query,
-    collections: [collectionId],
-    limit: 8,
-    mode: "hybrid",
-  }),
+await ensureConsumerContract();
+const payload = await dataPlatform.search({
+  query,
+  collections: [collectionId],
+  limit: 8,
+  mode: "hybrid",
 });
-const payload = await response.json();
 
 console.log("Collection:", collectionId);
 console.log("Query:", query);

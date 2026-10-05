@@ -1,6 +1,7 @@
 import {
   DATA_PLATFORM_URL,
-  dataPlatformFetch,
+  dataPlatform,
+  ensureConsumerContract,
 } from "./client.mjs";
 
 const args = process.argv.slice(2);
@@ -19,16 +20,12 @@ if (!query) {
   process.exit(2);
 }
 
-const response = await dataPlatformFetch("/v1/discover", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    connector,
-    query,
-    limit: 10,
-  }),
+await ensureConsumerContract();
+const payload = await dataPlatform.discover({
+  connector,
+  query,
+  limit: 10,
 });
-const payload = await response.json();
 
 console.log("Data Platform:", DATA_PLATFORM_URL);
 console.log("Connector:", connector);

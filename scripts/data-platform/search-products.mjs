@@ -1,10 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import {
-  REPO_ROOT,
-  dataPlatformFetch,
-} from "./client.mjs";
+import { REPO_ROOT, dataPlatform, ensureConsumerContract } from "./client.mjs";
 
 const query = process.argv.slice(2).join(" ").trim();
 if (!query) {
@@ -29,17 +26,13 @@ if (!state.active_collection_id) {
   throw new Error("No active product metadata collection.");
 }
 
-const response = await dataPlatformFetch("/v1/search", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    query,
-    collections: [state.active_collection_id],
-    limit: 8,
-    mode: "hybrid",
-  }),
+await ensureConsumerContract();
+const payload = await dataPlatform.search({
+  query,
+  collections: [state.active_collection_id],
+  limit: 8,
+  mode: "hybrid",
 });
-const payload = await response.json();
 
 console.log("Collection:", state.active_collection_id);
 console.log("Query:", query);

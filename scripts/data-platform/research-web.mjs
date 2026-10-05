@@ -4,8 +4,9 @@ import path from "node:path";
 import {
   REPO_ROOT,
   collectionStats,
-  dataPlatformFetch,
+  dataPlatform,
   ensureCollection,
+  ensureConsumerContract,
   sha256,
 } from "./client.mjs";
 
@@ -42,15 +43,13 @@ if (!Number.isInteger(minSuccess) || minSuccess < 1 || minSuccess > limit) {
   throw new Error("--min-success must be between 1 and --limit");
 }
 
-const discoveryResponse = await dataPlatformFetch("/v1/discover", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ connector, query, limit }),
-});
-const discovery = await discoveryResponse.json();
+await ensureConsumerContract();
+const discovery = await dataPlatform.discover({ connector, query, limit });
 const resources = (discovery.resources || []).slice(0, limit);
 if (!resources.length) {
-  throw new Error("Discovery returned no resources; research collection was not created.");
+  throw new Error(
+    "Discovery returned no resources; research collection was not created.",
+  );
 }
 
 const manifestText = [
@@ -73,16 +72,11 @@ const failures = [];
 
 for (const [index, resource] of resources.entries()) {
   try {
-    const response = await dataPlatformFetch("/v1/ingest/url", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        collection_id: collectionId,
-        url: resource.canonical_uri,
-        title: resource.title || null,
-      }),
+    const result = await dataPlatform.ingestUrl({
+      collectionId,
+      url: resource.canonical_uri,
+      title: resource.title || null,
     });
-    const result = await response.json();
     successes.push({
       canonical_uri: resource.canonical_uri,
       title: resource.title || null,
@@ -139,7 +133,9 @@ try {
 } catch (error) {
   if (error?.code !== "ENOENT") throw error;
 }
-const previousCollections = Array.isArray(state.collections) ? state.collections : [];
+const previousCollections = Array.isArray(state.collections)
+  ? state.collections
+  : [];
 const record = {
   collection_id: collectionId,
   query,
