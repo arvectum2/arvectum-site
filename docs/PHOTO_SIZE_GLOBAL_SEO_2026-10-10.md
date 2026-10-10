@@ -1,7 +1,7 @@
 # Photo & PDF Size: draft multilingual SEO rollout — 2026-10-10
 
 **Branch:** `feature/photo-size-global-seo` (separate from production `main`).
-**Status:** DRAFT, **NOT DEPLOYED**. Merge/deploy only after the app code refactor, final App Store metadata approval and an explicit release decision.
+**Status (2026-10-10): LIVE DEPLOYED** after owner expressly authorized release. GitHub origin/main at commit 2607dcf; deployment backed up the old index and sitemap under ~/backups/photo-size-seo-20261010 on REG.RU hosting.
 
 ## Prepared pages
 
@@ -37,3 +37,11 @@ The locale-aware pages live at different URLs for actual indexing, rather than r
 Use search query/impression/click and CTR segmented by landing page in Google Search Console; sitemap/indexing and queries in Yandex Webmaster; outgoing App Store CTA clicks with privacy-preserving analytics only if the site has consent-compliant measurement; App Store page views and downloads by country. Do not claim conversion improvements before the data exists.
 
 Related app draft: `arvectum2/arvectum-tools` / `feature/photo-pdf-global-aso`.
+
+## Deployment evidence (2026-10-10)
+
+- Authorized owner instruction: publish 1.0.0 and associated international SEO.
+- Published static site pages at arvectum.com, including RU/EN/ES/PT-BR/DE/FR and RU/EN PDF guides.
+- Uploaded matching images and generated sitemap to the REG.RU server with existing SOCKS5 SSH tunnel after direct SSH timed out.
+- Verified 11/11 remote resources with HTTP 200 and exact SHA256 agreement with committed files. Production smoke test passed on existing site paths.
+- App Store version 1.0.0 (12) awaits Apple approval; the site was published ahead of its approval.
