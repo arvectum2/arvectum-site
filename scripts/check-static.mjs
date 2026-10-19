@@ -36,6 +36,8 @@ const htmlFiles = allFiles
   )
   .sort();
 const htmlSet = new Set(htmlFiles);
+// Do not grant public SEO status to the customer's non-indexable prototype.
+const isPrivatePreviewPage = (relPath) => relPath.startsWith("schlam/");
 
 const publicIndexablePages = [
   "index.html",
@@ -186,10 +188,18 @@ for (const fileName of htmlFiles) {
   const hasTitle = title.length > 0;
   const hasDescription = description.length > 0;
   const hasCanonical = canonical.length > 0;
+  const privatePreview = isPrivatePreviewPage(fileName);
 
   record(hasTitle, `${fileName}: missing or empty <title>`);
-  record(hasDescription, `${fileName}: missing meta description`);
-  record(hasCanonical, `${fileName}: missing canonical link`);
+  if (privatePreview) {
+    record(
+      /<meta[^>]+name="robots"[^>]+content="[^"]*noindex[^"]*"/i.test(html),
+      fileName + ": private prototype must explicitly use robots noindex",
+    );
+  } else {
+    record(hasDescription, `${fileName}: missing meta description`);
+    record(hasCanonical, `${fileName}: missing canonical link`);
+  }
   record(
     !html.includes("/Users/"),
     `${fileName}: must not contain local machine paths`,
@@ -203,34 +213,36 @@ for (const fileName of htmlFiles) {
     `${fileName}: must not show public no-JavaScript messaging`,
   );
 
-  record(
-    /<link[^>]+rel="icon"[^>]+type="image\/svg\+xml"[^>]+href="\/assets\/brand\/favicon\.svg\?v=20260616-seo24"/i.test(
-      html,
-    ),
-    `${fileName}: missing SVG favicon link`,
-  );
-  record(
-    /<link[^>]+rel="icon"[^>]+sizes="32x32"[^>]+href="\/assets\/brand\/favicon-32x32\.png\?v=20260616-seo24"/i.test(
-      html,
-    ),
-    `${fileName}: missing 32x32 favicon link`,
-  );
-  record(
-    /<link[^>]+rel="icon"[^>]+sizes="16x16"[^>]+href="\/assets\/brand\/favicon-16x16\.png\?v=20260616-seo24"/i.test(
-      html,
-    ),
-    `${fileName}: missing 16x16 favicon link`,
-  );
-  record(
-    /<link[^>]+rel="apple-touch-icon"[^>]+href="\/assets\/brand\/apple-touch-icon\.png\?v=20260616-seo24"/i.test(
-      html,
-    ),
-    `${fileName}: missing apple-touch-icon link`,
-  );
-  record(
-    /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico"/i.test(html),
-    `${fileName}: missing shortcut icon link`,
-  );
+  if (!privatePreview) {
+    record(
+      /<link[^>]+rel="icon"[^>]+type="image\/svg\+xml"[^>]+href="\/assets\/brand\/favicon\.svg\?v=20260616-seo24"/i.test(
+        html,
+      ),
+      `${fileName}: missing SVG favicon link`,
+    );
+    record(
+      /<link[^>]+rel="icon"[^>]+sizes="32x32"[^>]+href="\/assets\/brand\/favicon-32x32\.png\?v=20260616-seo24"/i.test(
+        html,
+      ),
+      `${fileName}: missing 32x32 favicon link`,
+    );
+    record(
+      /<link[^>]+rel="icon"[^>]+sizes="16x16"[^>]+href="\/assets\/brand\/favicon-16x16\.png\?v=20260616-seo24"/i.test(
+        html,
+      ),
+      `${fileName}: missing 16x16 favicon link`,
+    );
+    record(
+      /<link[^>]+rel="apple-touch-icon"[^>]+href="\/assets\/brand\/apple-touch-icon\.png\?v=20260616-seo24"/i.test(
+        html,
+      ),
+      `${fileName}: missing apple-touch-icon link`,
+    );
+    record(
+      /<link[^>]+rel="shortcut icon"[^>]+href="\/favicon\.ico"/i.test(html),
+      `${fileName}: missing shortcut icon link`,
+    );
+  }
 
   const hrefs = Array.from(
     html.matchAll(/\b(?:href|src)="([^"]+)"/g),
@@ -266,11 +278,13 @@ for (const fileName of htmlFiles) {
     /ИНН:\s*(?:XXX|0000+)/iu,
     /ОГРН:\s*(?:XXX|0000+)/iu,
   ];
-  for (const pattern of placeholderPatterns) {
-    record(
-      !pattern.test(html),
-      `${fileName}: forbidden placeholder text matched ${pattern}`,
-    );
+  if (!privatePreview) {
+    for (const pattern of placeholderPatterns) {
+      record(
+        !pattern.test(html),
+        `${fileName}: forbidden placeholder text matched ${pattern}`,
+      );
+    }
   }
 
   if (fileName === "cases.html") {
@@ -628,6 +642,13 @@ for (const relPath of publicIndexablePages) {
     seenDescriptions.set(meta.description, relPath);
   }
 }
+
+record(
+  !sitemapUrls.some((url) =>
+    /^https:\/\/arvectum\.com\/schlam(?:\/|$)/i.test(url),
+  ),
+  "sitemap.xml: private /schlam prototype must remain excluded",
+);
 
 for (const relPath of hiddenPages) {
   record(
