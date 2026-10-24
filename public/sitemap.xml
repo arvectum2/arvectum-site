@@ -78,7 +78,7 @@
   </url>
   <url>
     <loc>https://arvectum.com/privacy</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-10-14</lastmod>
   </url>
   <url>
     <loc>https://arvectum.com/security-control.html</loc>
@@ -154,7 +154,7 @@
   </url>
   <url>
     <loc>https://arvectum.com/tools/index.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-19</lastmod>
   </url>
   <url>
     <loc>https://arvectum.com/tools/photo-size/35x45.html</loc>
@@ -201,11 +201,19 @@
     <lastmod>2026-10-05</lastmod>
   </url>
   <url>
+    <loc>https://arvectum.com/tools/pushkin/en/index.html</loc>
+    <lastmod>2026-10-19</lastmod>
+  </url>
+  <url>
+    <loc>https://arvectum.com/tools/pushkin/index.html</loc>
+    <lastmod>2026-10-19</lastmod>
+  </url>
+  <url>
     <loc>https://arvectum.com/tools/what/en/index.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-19</lastmod>
   </url>
   <url>
     <loc>https://arvectum.com/tools/what/index.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-19</lastmod>
   </url>
 </urlset>
