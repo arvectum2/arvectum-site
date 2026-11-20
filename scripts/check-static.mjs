@@ -266,9 +266,13 @@ for (const fileName of htmlFiles) {
     /ИНН:\s*(?:XXX|0000+)/iu,
     /ОГРН:\s*(?:XXX|0000+)/iu,
   ];
+  // Native form hints and the exact photo-caption CSS class are markup, not unfinished copy.
+  const copyForPlaceholderCheck = html
+    .replace(/(<(?:input|textarea)\b[^>]*?)\bplaceholder(?=\s*=)/gi, "$1data-field-hint")
+    .replace(/(\bclass\s*=\s*["'][^"']*)\bplaceholder-tag\b/gi, "$1image-caption-tag");
   for (const pattern of placeholderPatterns) {
     record(
-      !pattern.test(html),
+      !pattern.test(copyForPlaceholderCheck),
       `${fileName}: forbidden placeholder text matched ${pattern}`,
     );
   }

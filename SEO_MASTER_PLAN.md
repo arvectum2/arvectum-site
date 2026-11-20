@@ -38,3 +38,8 @@
 - `npm run lint`
 - `npm run check`
 - `npm run check:production` if production is reachable from the current environment
+
+
+## Spec Kit — candidate linkage (2026-11-20)
+
+[Specification](specs/001-site-roadmap-traceability/spec.md) · [Plan](specs/001-site-roadmap-traceability/plan.md) · [Integration tasks](specs/001-site-roadmap-traceability/tasks.md). Original source and authority unchanged.
